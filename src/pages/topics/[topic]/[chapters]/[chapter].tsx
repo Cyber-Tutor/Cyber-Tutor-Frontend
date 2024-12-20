@@ -73,11 +73,9 @@ export default function ChapterPage() {
             ...chapterSnapshot.data(),
           } as Chapter);
         } else {
-          // console.error("No such chapter!");
           setError("Chapter not found");
         }
       } catch (err) {
-        // console.error("Error fetching chapter:", err);
         setError("Failed to fetch chapter");
       } finally {
         setLoading(false);
@@ -88,7 +86,6 @@ export default function ChapterPage() {
   }, [topicId, chapterId]);
 
   useEffect(() => {
-    // Check if 1 minute and 30 seconds has passed
     if (secondsElapsed >= 30) {
       setProgressComplete(true);
     }
@@ -107,10 +104,8 @@ export default function ChapterPage() {
         if (userDocument && userDocument.exists()) {
           setUserGroup(userDocument.data().group);
         } else {
-          // console.error("No such user!");
         }
       } catch (err) {
-        // console.error("Error fetching user:", err);
       }
     };
 
@@ -127,10 +122,8 @@ export default function ChapterPage() {
         if (userDocument && userDocument.exists()) {
           setContentPreference(userDocument.data().contentPreference);
         } else {
-          // console.error("No such user!");
         }
       } catch (err) {
-        // console.error("Error fetching user:", err);
       }
     };
 

@@ -38,15 +38,12 @@ const SignUpForm: React.FC = () => {
       const result = await signInWithPopup(auth, provider);
       const additionalUserInfo = getAdditionalUserInfo(result);
       if (additionalUserInfo?.isNewUser) {
-        // console.log("User is signing up for the first time.");
         const user = result.user;
         await createUserDocument(user, user.displayName || "");
       } else {
-        // console.log("User is an existing user.");
       }
       router.push("/");
     } catch (e) {
-      // console.error(e);
     }
   };
 
@@ -132,7 +129,6 @@ const SignUpForm: React.FC = () => {
 
   const createCheckMark = (isTrue: boolean) => (isTrue ? "✅" : "");
 
-  const passwordHeader = <h6 className="text-white">Pick a password</h6>;
   const passwordFooter = (
     <>
       <Divider />

@@ -12,7 +12,6 @@ type QuizProps = {
 };
 
 const Quiz = ({ questions }: QuizProps) => {
-  // Question component
   const QuizQuestion = ({ data }: { data: QuizProps["questions"][string] }) => {
     return (
       <div>

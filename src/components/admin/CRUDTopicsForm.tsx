@@ -7,101 +7,81 @@ import {
 import { useTopics } from "../../hooks/useTopics";
 import { Topic } from "src/types";
 
+const defaultTopicState: Topic = {
+  topicId: "",
+  topicTitle: "",
+  topicDescription: "",
+  order: 0,
+  isComplete: false,
+  chapters: [],
+};
+
 const CRUDTopicsForm: React.FC = () => {
   const topics = useTopics();
   const [currentTopicId, setCurrentTopicId] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
   const [orderInputs, setOrderInputs] = useState<{ [key: string]: number }>({});
-  const [newTopic, setNewTopic] = useState<Topic>({
-    topicId: "",
-    topicTitle: "",
-    topicDescription: "",
-    order: 0,
-    isComplete: false,
-    chapters: [],
-  });
+  const [newTopic, setNewTopic] = useState<Topic>(defaultTopicState);
+
+  useEffect(() => {
+    const updatedOrderInputs: { [key: string]: number } = {};
+    topics.forEach((topic) => {
+      updatedOrderInputs[topic.topicId || ""] = topic.order;
+    });
+    setOrderInputs(updatedOrderInputs);
+  }, [topics]);
 
   const handleTopicChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = event.target;
-    setNewTopic({
-      ...newTopic,
+    setNewTopic((prevTopic) => ({
+      ...prevTopic,
       [name]: name === "order" ? Number(value) : value,
-    });
+    }));
   };
 
-  const handleAddTopic = async (event: FormEvent) => {
+  const handleAddOrUpdateTopic = async (event: FormEvent) => {
     event.preventDefault();
     if (!newTopic.topicTitle || !newTopic.topicDescription) return;
 
     const { topicTitle, topicDescription, order } = newTopic;
 
     if (currentTopicId) {
-      await updateTopic(currentTopicId, {
-        topicTitle,
-        topicDescription,
-        order,
-      });
+      await updateTopic(currentTopicId, { topicTitle, topicDescription, order });
     } else {
-      const topicId = newTopic.topicTitle.toLowerCase().replace(/ /g, "_");
+      const topicId = topicTitle.toLowerCase().replace(/ /g, "_");
       await addTopic(topicId, { topicTitle, topicDescription, order });
     }
 
-    setNewTopic({
-      topicId: "",
-      topicTitle: "",
-      topicDescription: "",
-      order: 0,
-      isComplete: false,
-      chapters: [],
-    });
-    setCurrentTopicId("");
+    resetForm();
   };
+
   const handleEditTopic = (topic: Topic) => {
-    setCurrentTopicId(topic.topicId || "");
-    setNewTopic({
-      topicId: topic.topicId,
-      topicTitle: topic.topicTitle,
-      topicDescription: topic.topicDescription,
-      order: topic.order,
-      isComplete: topic.isComplete,
-      chapters: topic.chapters || [],
-    });
+    setCurrentTopicId(topic.topicId);
+    setNewTopic(topic);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
-    setCurrentTopicId("");
-    setNewTopic({
-      topicId: "",
-      topicTitle: "",
-      topicDescription: "",
-      order: 0,
-      isComplete: false,
-      chapters: [],
-    });
+    resetForm();
     setIsEditing(false);
   };
 
-  useEffect(() => {
-    const newOrderInputs: { [key: string]: number } = {};
-    topics.forEach((topic) => {
-      newOrderInputs[topic.topicId || ""] = topic.order;
-    });
-    setOrderInputs(newOrderInputs);
-  }, [topics]);
+  const resetForm = () => {
+    setCurrentTopicId("");
+    setNewTopic(defaultTopicState);
+  };
 
   const handleSubmitOrder = async () => {
-    for (const topicId in orderInputs) {
-      await updateTopic(topicId, { order: orderInputs[topicId] });
-    }
+    const updatePromises = Object.entries(orderInputs).map(([topicId, order]) =>
+      updateTopic(topicId, { order }),
+    );
+    await Promise.all(updatePromises);
   };
 
-  const toggleLock = () => {
-    setIsLocked(!isLocked);
-  };
+  const toggleLock = () => setIsLocked((prev) => !prev);
 
   const handleDeleteTopic = async (id: string) => {
     await deleteTopic(id);
@@ -121,10 +101,10 @@ const CRUDTopicsForm: React.FC = () => {
                 value={orderInputs[topic.topicId || ""]}
                 className="mr-2 w-12"
                 onChange={(e) =>
-                  setOrderInputs({
-                    ...orderInputs,
+                  setOrderInputs((prev) => ({
+                    ...prev,
                     [topic.topicId || ""]: Number(e.target.value),
-                  })
+                  }))
                 }
               />
               <h3>{topic.topicTitle}</h3>
@@ -172,7 +152,7 @@ const CRUDTopicsForm: React.FC = () => {
           </button>
         </div>
       </ol>
-      <form onSubmit={handleAddTopic} className="col-span-4 mx-4">
+      <form onSubmit={handleAddOrUpdateTopic} className="col-span-4 mx-4">
         <input
           type="text"
           name="topicTitle"
@@ -203,7 +183,7 @@ const CRUDTopicsForm: React.FC = () => {
             type="submit"
             className="rounded bg-blue-500 px-4 py-2 text-white"
           >
-            {currentTopicId ? "Save Changes" : "Add Topic"}
+            {isEditing ? "Save Changes" : "Add Topic"}
           </button>
         </div>
       </form>

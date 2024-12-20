@@ -15,13 +15,6 @@ const TimerComponent: React.FC<TimerProps> = ({
     }, 1000);
 
     return () => {
-      // Old method of pushing the time the user spent on the page to firestore
-
-      // Hardcoded user id for now, for testing purposes
-      // const userDocRef = doc(db, 'users', 'i84Tn9EtSxbm01wuhaGG');
-      // updateDoc(userDocRef, {
-      //   secondsElapsed: secondsElapsed
-      // });
       clearInterval(timer);
     };
   }, [secondsElapsed, setSecondsElapsed]);

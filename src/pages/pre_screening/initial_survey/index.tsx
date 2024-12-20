@@ -17,7 +17,6 @@ import determineProficiency from "~/components/ai/Gemini";
 import { Serializer } from "survey-react";
 import Head from "next/head";
 
-// Apply the Tailwind CSS theme
 StylesManager.applyTheme("default");
 
 interface Question {
@@ -52,9 +51,6 @@ const InitialSurvey = () => {
         questionData.topic = doc.data().topic.toString();
         questionData.questionCategory = doc.data().questionCategory.toString();
 
-        // console.log('Question Category:', questionData.questionCategory);
-        // console.log('Question Topic:', questionData.topic);
-
         questions.push({ id: doc.id, data: questionData });
       });
       return questions;
@@ -68,9 +64,9 @@ const InitialSurvey = () => {
     ) => {
       return {
         showProgressBar: "bottom",
-        showPageNumbers: true, // Hide page numbers
-        showPrevButton: false, // Hide previous button
-        showPageTitles: false, // Hide page titles
+        showPageNumbers: true, 
+        showPrevButton: false, 
+        showPageTitles: false, 
         pages: questions.map((q, index) => ({
           name: `page${index + 1}`,
           elements: [
@@ -196,15 +192,12 @@ const InitialSurvey = () => {
                 userLevel: level,
               });
             } else {
-              // console.log('No user document found');
             }
           })
           .then(() => {
-            // console.log('User document successfully updated');
             router.push("/pre_screening/demographics_survey");
           })
           .catch((error) => {
-            // console.error('Error updating documents: ', error);
           });
       }
     }
@@ -292,7 +285,6 @@ const InitialSurvey = () => {
             getAuth().currentUser?.uid || "",
           );
 
-          // console.log('Proficiency levels:', proficiencyLevels);
 
           userDocRef.then((docRef) => {
             if (docRef) {
@@ -305,12 +297,10 @@ const InitialSurvey = () => {
                   proficiency: proficiencyLevels[index]?.trim() ?? "",
                 });
               });
-              // console.log('Proficiency levels updated successfully.');
             }
           });
         })
         .catch((error) => {
-          // console.error('Error determining proficiency:', error);
           const proficiency = [
             "beginner",
             "beginner",
@@ -340,7 +330,6 @@ const InitialSurvey = () => {
                   proficiency: proficiency[index]?.trim() ?? "",
                 });
               });
-              // console.log('Proficiency levels updated successfully.');
             }
           });
         });

@@ -84,7 +84,6 @@ export default function SurveyComponent(): JSX.Element {
 
       try {
         await batch.commit();
-        // console.log("Survey responses successfully written to Firestore.");
 
         const lastQuestionId = Object.keys(surveyData).pop();
         const answerKey = lastQuestionId ? surveyData[lastQuestionId] : null;
@@ -120,10 +119,8 @@ export default function SurveyComponent(): JSX.Element {
         await demographicSurveyComplete(user.uid, surveyData);
         router.push("/");
       } catch (error) {
-        // console.error("Error writing survey responses: ", error);
       }
     } else {
-      // console.error("User is not authenticated.");
     }
   };
 

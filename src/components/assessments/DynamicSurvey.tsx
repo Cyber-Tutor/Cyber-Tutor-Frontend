@@ -118,7 +118,6 @@ const DynamicSurvey = ({ chapterId, userId }: DynamicSurveyProps) => {
                 type: "radiogroup",
                 name: `question${index + 1}`,
                 title: q.question,
-                // title: `${q.question} (Difficulty: ${q.difficulty})`,
                 isRequired: true,
                 choices: sortedChoices,
               };
@@ -137,10 +136,6 @@ const DynamicSurvey = ({ chapterId, userId }: DynamicSurveyProps) => {
       }
     });
   }, [chapterId, userId]);
-
-  // useEffect(() => {
-  //   console.log("Correct Answers:", correctAnswers);
-  // }, [correctAnswers]);
 
   const calculateResults = (
     results: Record<string, string>,
@@ -247,12 +242,10 @@ const DynamicSurvey = ({ chapterId, userId }: DynamicSurveyProps) => {
             result.completedHtml = completionMessage;
 
             if (resultMessage === "User passed") {
-              // alert(`You passed with a score of ${percentage.toFixed(2)}%`);
               updateUserProgress(percentage, true, timeElapsed).then(() => {
                 router.push(`/topics/${topicId}`);
               });
             } else {
-              // alert(`You failed with a score of ${percentage.toFixed(2)}%`);
               updateUserProgress(percentage, false, timeElapsed);
               setUserFailed(true);
             }

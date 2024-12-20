@@ -43,14 +43,12 @@ export default function Home() {
   const randomEmoji = getRandomEmoji();
   const [isClient, setIsClient] = useState(false);
 
-  // Get the user ID
   const uid = user ? user.uid : null;
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Query for the user document from Firestore
   useEffect(() => {
     if (uid) {
       queryUserDocument(uid).then((userDoc: DocumentData | null) => {
@@ -90,7 +88,6 @@ export default function Home() {
     }
   }, [userDocument?.lastReadTime]);
 
-  // Check if the user has completed the initial survey, demographic survey and update the streak count. If not, redirect to the respective survey page
   useEffect(() => {
     if (userDocument) {
       const lastLoginDate = new Date(
@@ -108,7 +105,6 @@ export default function Home() {
     }
   }, [userDocument]);
 
-  // Fetch the number of topics completed by the user by calling the function numberOfTopicsCompleted from firebase_functions.ts
   if (uid) {
     const getTopicsCompleted = async () => {
       const topicsNum = await numberOfTopicsCompleted(uid);
@@ -117,7 +113,6 @@ export default function Home() {
     getTopicsCompleted();
   }
 
-  // Load the proficiency ratio from local storage
   useEffect(() => {
     const savedRatio = localStorage.getItem("proficiencyRatio");
     if (savedRatio) {
@@ -129,7 +124,6 @@ export default function Home() {
     localStorage.setItem("proficiencyRatio", proficiencyRatio.toString());
   }, [proficiencyRatio]);
 
-  // Fetch the progress of the user for number of chapters completed
   useEffect(() => {
     if (userDocument && userDocument.id) {
       const progressRef = collection(db, `users/${userDocument.id}/progress`);
@@ -191,7 +185,6 @@ export default function Home() {
       });
     }
   }
-  // Update the read streak count for the user
 
   async function updateReadStreak() {
     if (!uid || !userDocument) return;
@@ -211,10 +204,7 @@ export default function Home() {
     setHasReadToday(true);
   }
 
-  // Function to create the UI of the certificate and download it as a PDF
-
   function downloadCertificate(userName: any) {
-    // Create the UI of the certificate
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
@@ -233,7 +223,6 @@ export default function Home() {
       align: "center",
     });
 
-    // Save the Certificate as a PDF
     doc.save("CyberTutor_Certificate.pdf");
   }
 
@@ -244,7 +233,6 @@ export default function Home() {
       </Head>
       <div className="flex min-h-screen w-full flex-col">
         {user ? (
-          // If user is logged in, show the dashboard with their progress information
           <BaseLayout>
             <motion.div
               className="  mt-20 md:mt-16 lg:mt-16"
@@ -314,9 +302,6 @@ export default function Home() {
                   )}
                 </motion.div>
 
-                {/* {hasReadToday ? (
-                  <p>You have already read an article today.</p>
-                ) : ( */}
                 <div className="flex items-center justify-center">
                   <button
                     onClick={() => {
@@ -333,14 +318,10 @@ export default function Home() {
                     Read an Article
                   </button>
                 </div>
-
-                {/* )} */}
               </motion.div>
             </motion.div>
           </BaseLayout>
         ) : (
-          // If user is not logged in, show the landing page with the introduction video
-
           <motion.div
             className="flex h-screen flex-col items-center justify-center bg-gray-200 p-4 text-gray-900"
             initial={{ opacity: 0 }}

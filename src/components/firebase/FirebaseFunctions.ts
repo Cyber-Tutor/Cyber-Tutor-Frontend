@@ -21,27 +21,18 @@ export default async function queryUserDocument(
 ): Promise<DocumentData | null> {
   const usersCollectionRef = collection(db, "users");
 
-  // Hardcoded user ID for testing
   const q = query(usersCollectionRef, where("userId", "==", userIdString));
 
   try {
     const querySnapshot = await getDocs(q);
-    // if (querySnapshot.empty || querySnapshot.docs.length === 0) {
-    //   console.log('No matching documents.');
-    //   return null;
-    // }
 
     const firstDoc = querySnapshot.docs[0];
     if (firstDoc) {
-      // console.log("Success.");
-      //   return firstDoc.data();
       return firstDoc;
     } else {
-      // console.log("No matching documents.");
       return null;
     }
   } catch (error) {
-    // console.error("Error fetching user document:", error);
     return null;
   }
 }
@@ -52,24 +43,19 @@ export async function handleVideoEnd(
 ): Promise<void> {
   try {
     if (!userDocumentId) {
-      // console.error("User document ID is undefined.");
       return;
     }
-
-    // Set videoWatched to true in Firestore
     const videoDocRef = doc(db, "users", userDocumentId);
     await updateDoc(videoDocRef, {
       videoCompleted: true,
     });
   } catch (error) {
-    // console.error("Error updating video progress:", error);
   }
 }
 
 export async function isWatched(userDocumentId: string): Promise<boolean> {
   try {
     if (!userDocumentId) {
-      // console.error("User document ID is undefined.");
       return false;
     }
 
@@ -80,7 +66,6 @@ export async function isWatched(userDocumentId: string): Promise<boolean> {
       const videoCompleted = docSnap.data().videoCompleted || false;
       return videoCompleted;
     } else {
-      // console.log("No such document!");
       return false;
     }
   } catch (error) {
@@ -121,7 +106,6 @@ export async function createUserDocument(
     for (const topicDoc of topicsSnapshot.docs) {
       const topicId = topicDoc.id;
 
-      // Proficiency collection with proficiency attribute as string
       const proficiencyRef = doc(
         collection(db, "users", userRef.id, "proficiency"),
         topicId,
@@ -130,7 +114,6 @@ export async function createUserDocument(
         proficiency: "",
       });
 
-      // Level collection with value attribute as number
       const levelRef = doc(
         collection(db, "users", userRef.id, "levels"),
         topicId,
@@ -162,7 +145,6 @@ export async function createUserDocument(
 
         if (chapterData.chapterType === "assessment") {
           progressData.attempts = {
-            // exampleAttemptId: { score: 0, date: Firebase.firestore.Timestamp.now(), ...otherAttemptDetails }
           };
         }
 
@@ -175,21 +157,12 @@ export async function createUserDocument(
     }
 
     await batch.commit();
-    // console.log(
-    //   "User document and subcollections created with ID: ",
-    //   userRef.id,
-    // );
   } catch (error) {
-    // console.error(
-    //   "Error fetching topics or chapters, or error in batch write:",
-    //   error,
-    // );
   }
 }
 
 export const findUserDocId = async (userId: string): Promise<string | null> => {
   if (!userId) {
-    // console.error("User ID is undefined");
     return null;
   }
   const q = query(collection(db, "users"), where("userId", "==", userId));
@@ -270,14 +243,7 @@ export async function demographicSurveyComplete(
     demographicSurveyComplete: true,
   });
 
-  // const surveyResponseCollection = collection(userDoc, 'demographicSurveyResponse');
-  // const surveyResponseDoc = doc(surveyResponseCollection, userId);
-  // await setDoc(surveyResponseDoc, {
-  //   response: quizResponse
-  // });
 }
-
-// Topic Methods
 
 export async function numberOfTopicsCompleted(userId: string) {
   const docId = await findUserDocId(userId);
@@ -307,7 +273,6 @@ export async function numberOfTopicsCompleted(userId: string) {
 export async function isTopicComplete(userId: string, topicId: string) {
   const docId = await findUserDocId(userId);
   if (!docId) {
-    // console.error('User document ID not found');
     return false;
   }
 
@@ -330,7 +295,6 @@ export async function isTopicComplete(userId: string, topicId: string) {
 export async function isChapterComplete(userId: string, chapterId: string) {
   const docId = await findUserDocId(userId);
   if (!docId) {
-    // console.error('User document ID not found');
     return false;
   }
 
