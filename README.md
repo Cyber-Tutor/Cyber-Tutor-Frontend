@@ -74,9 +74,6 @@ Gemini is a proof-of-concept web application designed to deliver personalized cy
 - [security.org](https://security.org)
 - And 54 more sources.
 
-
-# Local Instance Instructions
-
 1. Clone the GitHub repository. When prompted to open cloned repository, please click "Open"
 2. Create your .env.
 
