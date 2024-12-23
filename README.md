@@ -4,7 +4,7 @@ By Matthew Quijano, Sean Clifford, Roland Van Duine​, Andrew Krasuski
 ![Slide1](https://github.com/user-attachments/assets/44c66f81-b013-42f4-805c-aa06fc8f2c21)
 
 ## Project Overview
-Gemini is a proof-of-concept web application designed to deliver personalized cybersecurity training content to users based on their knowledge, awareness, and behavioral habits. The tool dynamically tailors content to meet individual proficiency levels, ensuring a highly customized learning experience. It utilizes Google Gemini AI to recommend cybersecurity materials such as videos, articles, and tips, allowing users to stay safe online and enhance their knowledge.
+Cyber Tutor is a proof-of-concept web application designed to deliver personalized cybersecurity training content to users based on their knowledge, awareness, and behavioral habits. The tool dynamically tailors content to meet individual proficiency levels, ensuring a highly customized learning experience. It utilizes Google Gemini AI to recommend cybersecurity materials such as videos, articles, and tips, allowing users to stay safe online and enhance their knowledge.
 
 ## Key Features
 1. **User Proficiency Assessment**: Users complete an initial survey that evaluates their cybersecurity awareness and habits.
